@@ -1,8 +1,6 @@
 
-
-
 export const Roles = { 
-    admin: 'admin'
+    admin: 'admin',
+    gardener: 'gardener',
+    parent: 'parent'
 }
-
-

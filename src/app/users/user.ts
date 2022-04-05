@@ -1,9 +1,7 @@
-import { IdEntity, BackendMethod, Entity,  Validators, isBackend, Allow, Fields } from "remult";
-import { Remult, } from 'remult';
-import { Roles } from './roles';
-import { terms } from "../terms";
-import { UserInfo } from "remult";
 import * as jwt from 'jsonwebtoken';
+import { Allow, BackendMethod, Entity, Fields, IdEntity, isBackend, Remult, UserInfo, Validators } from "remult";
+import { terms } from "../terms";
+import { Roles } from './roles';
 
 
 @Entity<User>("Users", {
@@ -26,13 +24,16 @@ import * as jwt from 'jsonwebtoken';
     }
 )
 export class User extends IdEntity {
+
     @Fields.string({
         validate: [Validators.required, Validators.uniqueOnBackend],
         caption: terms.username
     })
     name = '';
+
     @Fields.string({ includeInApi: false })
     password = '';
+
     @Fields.date({
         allowApiUpdate: false
     })
@@ -43,6 +44,39 @@ export class User extends IdEntity {
         caption: terms.admin
     })
     admin = false;
+
+    @Fields.boolean({
+        allowApiUpdate: Roles.admin,
+        caption: terms.gardener
+    })
+    gardener = false;
+
+    @Fields.boolean({
+        allowApiUpdate: Roles.admin,
+        caption: terms.parent
+    })
+    parent = false;
+
+    @Fields.boolean({
+        includeInApi: false,
+        caption: terms.verified
+    })
+    verified = false;
+
+    @Fields.string<User>({
+        caption: terms.childName//,
+        // valueConverter: {
+        //     toDb: col => JSON.stringify(col),
+        //     fromDb: col => JSON.parse(col)
+        // }
+    })
+    childs = '';
+
+    @Fields.string({
+        caption: terms.kindergardenName
+    })
+    kindergardenName = ''
+
     constructor(private remult: Remult) {
         super();
     }
@@ -70,18 +104,30 @@ export class User extends IdEntity {
     static async signIn(user: string, password: string, remult?: Remult) {
         let result: UserInfo;
         let u = await remult!.repo(User).findFirst({ name: user });
-        if (u)
+        if (u) {
             if (await u.passwordMatches(password)) {
                 result = {
                     id: u.id,
                     roles: [],
-                    name: u.name
+                    name: u.name,
+                    isAdmin: false,
+                    isGardener: false,
+                    isParent: false
                 };
                 if (u.admin) {
                     result.roles.push(Roles.admin);
+                    result.isAdmin = true
+                }
+                else if (u.gardener) {
+                    result.roles.push(Roles.gardener);
+                    result.isGardener = true
+                }
+                else if (u.parent) {
+                    result.roles.push(Roles.parent);
+                    result.isParent = true
                 }
             }
-
+        }
         if (result!) {
             return (jwt.sign(result, getJwtTokenSignKey()));
         }

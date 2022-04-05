@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Remult } from 'remult';
+import { terms } from './terms';
 import { User } from './users/user';
 
 
@@ -14,23 +16,24 @@ export class AuthService {
 
     setAuthToken(token: string) {
         this.remult.setUser(new JwtHelperService().decodeToken(token));
-        sessionStorage.setItem(AUTH_TOKEN_KEY, token);
+        localStorage.setItem(AUTH_TOKEN_KEY, token);
+        this.router.navigateByUrl(terms.picking)
     }
 
     signOut() {
         this.remult.setUser(undefined!);
-        sessionStorage.removeItem(AUTH_TOKEN_KEY);
+        localStorage.removeItem(AUTH_TOKEN_KEY);
     }
 
     static fromStorage(): string {
-        return sessionStorage.getItem(AUTH_TOKEN_KEY)!;
+        return localStorage.getItem(AUTH_TOKEN_KEY)!;
     }
 
-    constructor(private remult: Remult) {
+    constructor(private remult: Remult, private router: Router) {
         let token = AuthService.fromStorage();
         if (token) {
             this.setAuthToken(token);
         }
     }
 }
-const AUTH_TOKEN_KEY = "authToken";
+const AUTH_TOKEN_KEY = "kipAuthToken";

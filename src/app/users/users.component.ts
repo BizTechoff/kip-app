@@ -23,16 +23,17 @@ export class UsersComponent implements OnInit {
     allowDelete: true,
     allowInsert: true,
     allowUpdate: true,
-    numOfColumnsInGrid: 2,
+    // numOfColumnsInGrid: 20,
 
     orderBy: { name: "asc" },
     rowsInPage: 100,
 
     columnSettings: users => [
       users.name,
-      users.admin
-
-
+      users.admin,
+      users.gardener,
+      users.parent,
+      users.verified
     ],
     rowButtons: [{
       name: 'Reset Password',

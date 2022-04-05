@@ -22,23 +22,21 @@ async function startup() {
         })
     );
     const dataProvider = async () => {
-        if (process.env['NODE_ENV'] === "production")
+        // if (process.env['NODE_ENV'] === "production")
             return createPostgresConnection({ configuration: "heroku" })
-        return undefined;
+        // return undefined;
     }
     let api = remultExpress({
         dataProvider
     });
     app.use(api);
     app.use('/api/docs', swaggerUi.serve,
-        swaggerUi.setup(api.openApiDoc({ title: 'remult-react-todo' })));
+        swaggerUi.setup(api.openApiDoc({ title: 'kip-app-docs' })));
 
-
-
-    app.use(express.static('dist/angular-starter-project'));
+    app.use(express.static('dist/kip-app'));
     app.use('/*', async (req, res) => {
         try {
-            res.sendFile(process.cwd() + '/dist/angular-starter-project/index.html');
+            res.sendFile(process.cwd() + '/dist/kip-app/index.html');
         } catch (err) {
             res.sendStatus(500);
         }

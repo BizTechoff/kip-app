@@ -4,10 +4,10 @@ This project is a starter project for using remult & angular that already has a 
 
 To use in a new project:
 ```sh
-md angular-starter-project
-cd angular-starter-project
+md kip-app
+cd kip-app
 git init
-git pull https://github.com/noam-honig/angular-starter-project.git
+git pull https://github.com/noam-honig/kip-app.git
 npm i
 ```
 
@@ -17,7 +17,7 @@ npm run dev
 ```
 
 # Tutorial:
-See [Creating a Fullstack Angular Remult app for non web developer](https://github.com/noam-honig/angular-starter-project/wiki/Creating-a-Fullstack-Angular-Remult-app-for-non-web-developer)
+See [Creating a Fullstack Angular Remult app for non web developer](https://github.com/noam-honig/kip-app/wiki/Creating-a-Fullstack-Angular-Remult-app-for-non-web-developer)
 
 
 # Create an Heroku site and deploy to it
