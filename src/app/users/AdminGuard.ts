@@ -52,3 +52,5 @@ export class GardenerOrAdminGuard extends AuthenticatedGuard {
 // זיהיתי את ההורה
 // מעיל+מים+תיק+בגדים+ציורים+
 // אני צריכה לשוחח איתך
+
+// אאסוף מוקדם היום
