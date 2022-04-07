@@ -1,9 +1,18 @@
 <div class="full-page">
-  <div class="header"></div>
+  <div class="header">
+    <!-- <h1 style="padding-top: 15px; height: 40px; text-align: center;" >אפליקציה לאיסוף מהגן</h1> -->
+  </div>
   <div class="grow-item">
-    <input [(ngModel)]="this.mobile">
+    <div class="login-form">
+      <div style="padding: 5px; background-color: lightcoral;">
+        <label>סלולרי</label>
+      </div>
+      <div style="padding: 15px; background-color: lightblue;">
+        <input [minlength]="9" [maxLength]="10" style="width: 100%; height: 40px; text-align: center;font-size: large;" [(ngModel)]="this.mobile">
+        <button style="width: 100%;" mat-flat-button (click)="this.signIn()">כניסה</button>
+      </div>
+    </div>
   </div>
   <div class="footer">
-    <button mat-flat-button (click)="this.signIn()">כניסה</button>
   </div>
 </div>

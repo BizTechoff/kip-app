@@ -16,7 +16,7 @@ export const terms = {
     gardener: 'גננת',
     gardens: 'גנים',
     hello: "שלום",
-    home: 'ברוכים הבאים',
+    home: 'אפליקציה לאיסוף מהגן', // 'ברוכים הבאים',
     installer: 'מתקין',
     installtions: 'התקנות',
     invalidOperation: "פעולה שגויה",
