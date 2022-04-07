@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from './user';
+import { GridSettings } from '@remult/angular/interfaces';
 import { BackendMethod, Remult } from 'remult';
-
 import { DialogService } from '../common/dialog';
 import { Roles } from './roles';
-import { GridSettings } from '@remult/angular/interfaces';
+import { User } from './user';
+
 
 
 @Component({
@@ -23,17 +23,20 @@ export class UsersComponent implements OnInit {
     allowDelete: true,
     allowInsert: true,
     allowUpdate: true,
-    // numOfColumnsInGrid: 20,
+    numOfColumnsInGrid: 20,
 
     orderBy: { name: "asc" },
     rowsInPage: 100,
 
     columnSettings: users => [
       users.name,
+      users.mobile,
       users.admin,
       users.gardener,
       users.parent,
-      users.verified
+      users.verified,
+      users.verifiedCode,
+      users.verifiedCodeTime
     ],
     rowButtons: [{
       name: 'Reset Password',
@@ -52,11 +55,11 @@ export class UsersComponent implements OnInit {
   });
   @BackendMethod({ allowed: Roles.admin })
   static async resetPassword(userId: string, remult?: Remult) {
-    let u = await remult!.repo(User).findId(userId);
-    if (u) {
-      u.password = '';
-      await u._.save();
-    }
+    // let u = await remult!.repo(User).findId(userId);
+    // if (u) {
+    //   u.password = '';
+    //   await u._.save();
+    // }
   }
 
 

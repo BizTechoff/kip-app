@@ -1,4 +1,4 @@
-import { Allow, Entity, Field, IdEntity } from "remult";
+import { Allow, Entity, Field, Fields, IdEntity } from "remult";
 import { terms } from "../../terms";
 import { Garden } from "../garden/garden";
 
@@ -16,5 +16,10 @@ export class Child extends IdEntity {
     name = ''
 
     photo = ''
+
+    @Fields.integer({
+        // sqlExpression: row => `( select count(*) from pickers where child = childs.id )`
+    })
+    pickersCount = 0
 
 }

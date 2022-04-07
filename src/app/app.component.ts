@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router, Route, ActivatedRoute } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
-import { Remult } from 'remult';
-import { DialogService } from './common/dialog';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { openDialog, RouteHelperService } from '@remult/angular';
-import { User } from './users/user';
-import { PasswordControl } from "./users/PasswordControl";
-import { InputAreaComponent } from './common/input-area/input-area.component';
-import { AuthService } from './auth.service';
-import { terms } from './terms';
 import { InputField } from '@remult/angular/interfaces';
+import { Remult } from 'remult';
+import { AuthService } from './auth.service';
+import { DialogService } from './common/dialog';
+import { InputAreaComponent } from './common/input-area/input-area.component';
+import { terms } from './terms';
+import { PasswordControl } from "./users/PasswordControl";
+import { User } from './users/user';
 
 @Component({
   selector: 'app-root',
@@ -18,30 +18,24 @@ import { InputField } from '@remult/angular/interfaces';
 })
 export class AppComponent implements OnInit {
 
-
   constructor(
     public router: Router,
     public activeRoute: ActivatedRoute,
     private routeHelper: RouteHelperService,
     public dialogService: DialogService,
     public remult: Remult,
-    public auth: AuthService) {
-
-
-  }
+    public auth: AuthService) { }
   terms = terms;
 
   async signIn() {
-    let user = new InputField<string>({ caption: terms.username });
-    let password = new PasswordControl();
+    let mobile = new InputField<string>({ caption: terms.mobile });
     openDialog(InputAreaComponent, i => i.args = {
       title: terms.signIn,
       fields: () => [
-        user,
-        password
+        mobile
       ],
       ok: async () => {
-        this.auth.signIn(user.value, password.value);
+        // this.auth.signIn(mobile.value, password.value);
       }
     });
   }
@@ -70,8 +64,8 @@ export class AppComponent implements OnInit {
           confirmPassword.error = terms.doesNotMatchPassword;
           throw new Error(confirmPassword.metadata.caption + " " + confirmPassword.error);
         }
-        await user.create(password.value);
-        this.auth.signIn(user.name, password.value);
+        // await user.create(password.value);
+        // this.auth.signIn(user.name, password.value);
 
       }
     });
@@ -90,24 +84,24 @@ export class AppComponent implements OnInit {
     });
   }
   async changePassword() {
-    let user = await this.remult.repo(User).findId(this.remult.user.id);
-    let password = new PasswordControl();
-    let confirmPassword = new PasswordControl(terms.confirmPassword);
-    openDialog(InputAreaComponent, i => i.args = {
-      title: terms.changePassword,
-      fields: () => [
-        password,
-        confirmPassword
-      ],
-      ok: async () => {
-        if (password.value != confirmPassword.value) {
-          confirmPassword.error = terms.doesNotMatchPassword;
-          throw new Error(confirmPassword.metadata.caption + " " + confirmPassword.error);
-        }
-        await user.updatePassword(password.value);
-        await user._.save();
-      }
-    });
+    // let user = await this.remult.repo(User).findId(this.remult.user.id);
+    // let password = new PasswordControl();
+    // let confirmPassword = new PasswordControl(terms.confirmPassword);
+    // openDialog(InputAreaComponent, i => i.args = {
+    //   title: terms.changePassword,
+    //   fields: () => [
+    //     password,
+    //     confirmPassword
+    //   ],
+    //   ok: async () => {
+    //     if (password.value != confirmPassword.value) {
+    //       confirmPassword.error = terms.doesNotMatchPassword;
+    //       throw new Error(confirmPassword.metadata.caption + " " + confirmPassword.error);
+    //     }
+    //     await user.updatePassword(password.value);
+    //     await user._.save();
+    //   }
+    // });
 
   }
 

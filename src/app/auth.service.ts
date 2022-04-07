@@ -10,8 +10,8 @@ import { User } from './users/user';
     providedIn: 'root'
 })
 export class AuthService {
-    async signIn(username: string, password: string) {
-        this.setAuthToken(await User.signIn(username, password));
+    async signIn(mobile: string, code: number) {
+        this.setAuthToken(await User.signIn(mobile, code));
     }
 
     setAuthToken(token: string) {

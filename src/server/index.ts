@@ -8,7 +8,9 @@ import * as helmet from 'helmet';
 import * as jwt from 'express-jwt';
 import * as compression from 'compression';
 import { getJwtTokenSignKey } from '../app/users/user';
-
+import '../app/core/garden/garden'
+import '../app/core/child/child'
+import '../app/core/picker/picker'
 
 async function startup() {
     config(); //loads the configuration from the .env file

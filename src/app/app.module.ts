@@ -26,6 +26,7 @@ import { PickingFromGateComponent } from './core/picking/picking-from-gate/picki
 import { PickingFromDoorComponent } from './core/picking/picking-from-door/picking-from-door.component';
 import { PickingToParentComponent } from './core/picking/picking-to-parent/picking-to-parent.component';
 import { GardensComponent } from './core/garden/gardens/gardens.component';
+import { PickingsComponent } from './core/picking/pickings/pickings.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { GardensComponent } from './core/garden/gardens/gardens.component';
     PickingFromGateComponent,
     PickingFromDoorComponent,
     PickingToParentComponent,
-    GardensComponent
+    GardensComponent,
+    PickingsComponent
   ],
   imports: [
     BrowserModule,

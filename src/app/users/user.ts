@@ -3,7 +3,6 @@ import { Allow, BackendMethod, Entity, Fields, IdEntity, isBackend, Remult, User
 import { terms } from "../terms";
 import { Roles } from './roles';
 
-
 @Entity<User>("Users", {
     allowApiRead: Allow.authenticated,
     allowApiUpdate: Allow.authenticated,
@@ -26,13 +25,16 @@ import { Roles } from './roles';
 export class User extends IdEntity {
 
     @Fields.string({
-        validate: [Validators.required, Validators.uniqueOnBackend],
+        validate: [Validators.required],
         caption: terms.username
     })
     name = '';
 
-    @Fields.string({ includeInApi: false })
-    password = '';
+    @Fields.string({
+        validate: [Validators.required, Validators.uniqueOnBackend],
+        caption: terms.mobile
+    })
+    mobile = '';
 
     @Fields.date({
         allowApiUpdate: false
@@ -57,6 +59,18 @@ export class User extends IdEntity {
     })
     parent = false;
 
+    @Fields.integer({
+        includeInApi: false,
+        caption: terms.verifiedCode
+    })
+    verifiedCode = 0;
+
+    @Fields.date({
+        allowApiUpdate: false,
+        caption: terms.verifiedDate
+    })
+    verifiedCodeTime!: Date;
+
     @Fields.boolean({
         includeInApi: false,
         caption: terms.verified
@@ -65,47 +79,38 @@ export class User extends IdEntity {
 
     @Fields.string<User>({
         caption: terms.childName//,
-        // valueConverter: {
-        //     toDb: col => JSON.stringify(col),
-        //     fromDb: col => JSON.parse(col)
-        // }
+        // sqlExpression: row => '( select count(*) from childs where parent = users.id )'
     })
-    childs = '';
-
-    @Fields.string({
-        caption: terms.kindergardenName
-    })
-    kindergardenName = ''
+    childsCount = '';
 
     constructor(private remult: Remult) {
         super();
     }
-    async hashAndSetPassword(password: string) {
-        this.password = (await import('password-hash')).generate(password);
-    }
-    async passwordMatches(password: string) {
-        return !this.password || (await import('password-hash')).verify(password, this.password);
-    }
+
     @BackendMethod({ allowed: true })
-    async create(password: string) {
-        if (!this._.isNew())
-            throw new Error(terms.invalidOperation);
-        await this.hashAndSetPassword(password);
-        await this._.save();
-    }
-    @BackendMethod({ allowed: Allow.authenticated })
-    async updatePassword(password: string) {
-        if (this._.isNew() || this.id != this.remult.user.id)
-            throw new Error(terms.invalidOperation);
-        await this.hashAndSetPassword(password);
-        await this._.save();
-    }
-    @BackendMethod({ allowed: true })
-    static async signIn(user: string, password: string, remult?: Remult) {
+    static async signIn(mobile: string, code: number, remult?: Remult) {
         let result: UserInfo;
-        let u = await remult!.repo(User).findFirst({ name: user });
+        let u = await remult!.repo(User).findFirst({ name: mobile });
         if (u) {
-            if (await u.passwordMatches(password)) {
+            if (!u.verified) {
+                if (u.verifiedCode > 0 && code > 0 && u.verifiedCode === code) {
+                    let now = new Date()
+                    let fiveMinEarlier = new Date(
+                        now.getFullYear(),
+                        now.getMonth(),
+                        now.getDate(),
+                        now.getHours(),
+                        now.getMinutes() - 5);// 5min
+
+                    if (u.verifiedCodeTime && u.verifiedCodeTime.getFullYear() > 1900) {
+                        if (u.verifiedCodeTime >= fiveMinEarlier) {
+                            u.verified = true
+                            await u.save()
+                        }
+                    }
+                }
+            }
+            if (u.verified) {
                 result = {
                     id: u.id,
                     roles: [],
