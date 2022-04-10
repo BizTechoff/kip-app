@@ -1,10 +1,14 @@
 import { Fields, IdEntity } from "remult";
+import { toDate } from "../../common/utils";
 import { terms } from "../../terms";
 import { User } from "../../users/user";
 
 export class Picking extends IdEntity {
 
-    @Fields.uuid({ caption: terms.date })
+    @Fields.dateOnly({
+        caption: terms.date,
+        displayValue: toDate
+    })
     date!: Date
 
     @Fields.uuid({ caption: terms.parent })
