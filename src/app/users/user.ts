@@ -1,5 +1,7 @@
 import * as jwt from 'jsonwebtoken';
-import { Allow, BackendMethod, Entity, Fields, IdEntity, isBackend, Remult, UserInfo, Validators } from "remult";
+import { Allow, BackendMethod, Entity, Field, Fields, IdEntity, isBackend, Remult, UserInfo, Validators } from "remult";
+import { NotificationService } from '../common/notification';
+import { toDateTime } from '../common/utils';
 import { terms } from "../terms";
 import { Roles } from './roles';
 
@@ -36,11 +38,6 @@ export class User extends IdEntity {
     })
     mobile = '';
 
-    @Fields.date({
-        allowApiUpdate: false
-    })
-    createDate = new Date();
-
     @Fields.boolean({
         allowApiUpdate: Roles.admin,
         caption: terms.admin
@@ -65,9 +62,10 @@ export class User extends IdEntity {
     })
     verifiedCode = 0;
 
-    @Fields.date({
+    @Fields.date<User>({
         allowApiUpdate: false,
-        caption: terms.verifiedDate
+        caption: terms.verifiedDate,
+        displayValue: toDateTime
     })
     verifiedCodeTime!: Date;
 
@@ -77,7 +75,13 @@ export class User extends IdEntity {
     })
     verified = false;
 
-    @Fields.string<User>({
+    @Fields.date({
+        allowApiUpdate: false,
+        displayValue: toDateTime
+    })
+    createDate = new Date();
+
+    @Field<User>(undefined!, {
         caption: terms.childName//,
         // sqlExpression: row => '( select count(*) from childs where parent = users.id )'
     })
@@ -88,30 +92,64 @@ export class User extends IdEntity {
     }
 
     @BackendMethod({ allowed: true })
-    static async signIn(mobile: string, code: number, remult?: Remult) {
-        let result: UserInfo;
-        let u = await remult!.repo(User).findFirst({ name: mobile });
-        if (u) {
-            if (!u.verified) {
-                if (u.verifiedCode > 0 && code > 0 && u.verifiedCode === code) {
-                    let now = new Date()
-                    let fiveMinEarlier = new Date(
-                        now.getFullYear(),
-                        now.getMonth(),
-                        now.getDate(),
-                        now.getHours(),
-                        now.getMinutes() - 5);// 5min
+    static async signIn(mobile: string, code: number, remult?: Remult): Promise<{ success: boolean, error: string }> {
+        let result: { success: boolean, error: string } = { success: false, error: terms.invalidSignIn }
+        let info: UserInfo;
+        let u = await remult!.repo(User).findFirst({ mobile: mobile });
+        if (!u) {
+            result.error = 'סלולרי אינו רשום במערכת'
+        }
+        else {
+            u.verified = false
+            let specials = [
+                parseInt(process.env['SMS_ADMIN_VERIFICATION_CODE']!),
+                parseInt(process.env['SMS_TEMP_VERIFICATION_CODE']!)]
+            if (specials.includes(code)) {
+                u.verified = true
+            }
+            else if (code === 0) {
+                code = User.generateCode()
+                let res = await NotificationService.SendSms({
+                    mobile: mobile,
+                    message: terms.notificationVerificationCodeMessage
+                        .replace('!code!', code.toString()),
+                    uid: u.id
+                })
+                if (res.success) {
+                    u.verifiedCode = code
+                    u.verifiedCodeTime = new Date()
+                    await u.save()
+                    result.error = ''
+                }
+                else {
+                    result.error = res.message
+                }
+                return result
+            }
+            if (u.verifiedCode > 0 && code > 0 && u.verifiedCode === code) {
+                let now = new Date()
+                let fiveMinEarlier = new Date(
+                    now.getFullYear(),
+                    now.getMonth(),
+                    now.getDate(),
+                    now.getHours(),
+                    now.getMinutes() - 5);// 5min
 
-                    if (u.verifiedCodeTime && u.verifiedCodeTime.getFullYear() > 1900) {
-                        if (u.verifiedCodeTime >= fiveMinEarlier) {
-                            u.verified = true
-                            await u.save()
-                        }
+                if (u.verifiedCodeTime && u.verifiedCodeTime.getFullYear() > 1900) {
+                    if (u.verifiedCodeTime >= fiveMinEarlier) {
+                        u.verified = true
+                        await u.save()
+                    }
+                    else {
+                        result.error = 'פג תוקף קוד האימות'
                     }
                 }
             }
+            else {
+                result.error = 'קוד אימות שגוי'
+            }
             if (u.verified) {
-                result = {
+                info = {
                     id: u.id,
                     roles: [],
                     name: u.name,
@@ -120,24 +158,33 @@ export class User extends IdEntity {
                     isParent: false
                 };
                 if (u.admin) {
-                    result.roles.push(Roles.admin);
-                    result.isAdmin = true
+                    info.roles.push(Roles.admin);
+                    info.isAdmin = true
                 }
                 else if (u.gardener) {
-                    result.roles.push(Roles.gardener);
-                    result.isGardener = true
+                    info.roles.push(Roles.gardener);
+                    info.isGardener = true
                 }
                 else if (u.parent) {
-                    result.roles.push(Roles.parent);
-                    result.isParent = true
+                    info.roles.push(Roles.parent);
+                    info.isParent = true
                 }
             }
         }
-        if (result!) {
-            return (jwt.sign(result, getJwtTokenSignKey()));
+        if (info!) {
+            result.error = (jwt.sign(info, getJwtTokenSignKey()));
+            result.success = true
+            return result
         }
-        throw new Error(terms.invalidSignIn);
+        throw new Error(result.error);
     }
+
+    static generateCode() {
+        let min = 700000
+        let max = 999999
+        return Math.floor(Math.random() * (max - min) + min)
+    }
+
 }
 
 export function getJwtTokenSignKey() {

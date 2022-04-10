@@ -60,3 +60,22 @@ export const mobileToDb = (mobile: string, mobile2?: string): boolean | string =
 
     return fixedMobile;
 }
+
+export const toDateTime = (row: any, col: Date) => {
+    return datetimeFormat(col)
+}
+
+export const toDate = (row: any, col: Date) => {
+    return dateFormat(col)
+}
+
+
+const dateFormat = (col: Date) => {
+    let result = col?.toLocaleDateString('en-GB')
+    return (result ?? undefined)
+}
+
+const datetimeFormat = (col: Date) => {
+    let result = col?.toLocaleString('en-GB')
+    return (result ?? undefined)
+}

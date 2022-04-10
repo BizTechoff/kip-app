@@ -10,7 +10,7 @@ import { InputAreaComponent } from './common/input-area/input-area.component';
 import { terms } from './terms';
 import { PasswordControl } from "./users/PasswordControl";
 import { User } from './users/user';
-
+// https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Aligning_Items_in_a_Flex_Container#creating_gaps_between_items
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

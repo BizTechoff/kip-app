@@ -1,15 +1,29 @@
 <div class="full-page">
-  <div class="header">
-    <!-- <h1 style="padding-top: 15px; height: 40px; text-align: center;" >אפליקציה לאיסוף מהגן</h1> -->
-  </div>
-  <div class="grow-item">
-    <div class="login-form">
-      <div style="padding: 5px; background-color: lightcoral;">
-        <label>סלולרי</label>
+  <div class="header"></div>
+  <div class="login-body">
+    <div>   
+      <label>סלולרי</label>
+    </div>
+    <div>
+      <div>
+        <input class="login-mobile" [maxLength]="10" [(ngModel)]="this.mobile">
       </div>
-      <div style="padding: 15px; background-color: lightblue;">
-        <input [minlength]="9" [maxLength]="10" style="width: 100%; height: 40px; text-align: center;font-size: large;" [(ngModel)]="this.mobile">
-        <button style="width: 100%;" mat-flat-button (click)="this.signIn()">כניסה</button>
+      <div>
+        <button class="login-signin" mat-flat-button (click)="this.signIn()">כניסה</button>
+      </div>
+    </div> 
+  </div>
+  <!-- <mat-divider></mat-divider> -->
+  <div *ngIf="this.isNeewVerifiedCode" class="login-body">
+    <div>
+      <label>קוד אימות</label>
+    </div>
+    <div>
+      <div>
+        <input class="login-mobile" [maxLength]="10" [(ngModel)]="this.verifiedCode">
+      </div>
+      <div>
+        <button class="login-signin" mat-flat-button (click)="this.verifyCode()">כניסה</button>
       </div>
     </div>
   </div>

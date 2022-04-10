@@ -13,7 +13,7 @@ import '../app/core/garden/garden'
 import '../app/core/child/child'
 import '../app/core/picker/picker'
  
-async function startup() {
+async function startup() { 
     config(); //loads the configuration from the .env file
     const app = express();
     app.use(sslRedirect());
