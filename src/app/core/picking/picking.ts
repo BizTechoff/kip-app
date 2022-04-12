@@ -5,7 +5,7 @@ import { User } from "../../users/user";
 
 @Entity('pickings', { allowApiCrud: Allow.authenticated })
 export class Picking extends IdEntity {
-
+ 
     @Fields.dateOnly({
         caption: terms.date,
         displayValue: toDate
