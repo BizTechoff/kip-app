@@ -12,7 +12,7 @@ import '../app/core/garden/garden';
 import '../app/core/picking/picking';
 import { getJwtTokenSignKey } from '../app/users/user';
 import '../server/send-sms';
-
+ 
 async function startup() {
     config(); //loads the configuration from the .env file
     const app = express();
@@ -23,10 +23,10 @@ async function startup() {
         helmet({
             contentSecurityPolicy: false,
         })
-    );
+    ); 
     const dataProvider = async () => {
         // if (process.env['NODE_ENV'] === "production")
-        return createPostgresConnection({ configuration: "heroku" })
+        return createPostgresConnection({ configuration: "heroku", sslInDev: true })
         // return undefined;
     }
     let api = remultExpress({

@@ -1,6 +1,9 @@
+
+// import '../app/common/selectors'
+
 export const terms = {
-    addUser:'הוספת משתמש חדש',
-    addPicking:'הוספת איסוף חדש',
+    addUser: 'הוספת משתמש חדש',
+    addPicking: 'הוספת איסוף חדש',
     admin: 'אדמין',
     close: 'סגירה',
     areYouSureYouWouldLikeToDelete: "האם למחוק",
@@ -42,11 +45,11 @@ export const terms = {
     password: 'סיסמא',
     picking: 'איסוף',
     products: 'מוצרים',
-    refresh:'רענון',
+    refresh: 'רענון',
     requiredField: 'שדה חובה',
     reviewer: 'סוקר',
     reviews: 'סקרים',
-    searchByName:'חיפוש לפי שם',
+    searchByName: 'חיפוש לפי שם',
     signIn: "כניסה",
     signOut: 'התנתקות',
     signUp: "הירשמות",
@@ -67,7 +70,7 @@ export const terms = {
 declare module 'remult' {
     export interface UserInfo {
         isAdmin: boolean
-        isParent: boolean
         isGardener: boolean
+        isParent: boolean
     }
 }

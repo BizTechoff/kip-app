@@ -109,7 +109,7 @@ export class User extends IdEntity {
     constructor(private remult: Remult) {
         super();
     }
-
+ 
     @BackendMethod({ allowed: true })
     static async signIn(mobile: string, code: number, remult?: Remult): Promise<{ success: boolean, error: string }> {
         let result: { success: boolean, error: string } = { success: false, error: terms.invalidSignIn }
@@ -136,7 +136,7 @@ export class User extends IdEntity {
                 })
                 if (res.success) {
                     u.verifiedTime = undefined!
-                    u.verified = false 
+                    u.verified = false
                     u.verifiedCode = code
                     u.verifiedCodeSentTime = new Date()
                     u.verifiedSentCount = (u.verifiedSentCount ?? 0) + 1

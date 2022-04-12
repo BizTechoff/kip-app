@@ -1,0 +1,32 @@
+<h1 mat-dialog-title>בחירת {{args.title||'רשומה'}}</h1>
+<div mat-dialog-content>
+    <form (submit)="selectFirst()">
+        <mat-form-field>
+            <input matInput [(ngModel)]="searchString" [ngModelOptions]="{standalone: true}" [placeholder]="'שם ה' + args.title" placeholder="שם הסניף"
+                (input)="doSearch()">
+        </mat-form-field>
+    </form>
+ 
+    <mat-nav-list role="list" *ngIf="this.users">
+        <ng-container *ngFor="let o of this.users">
+            <mat-list-item role="listitem" style="height:36px" (click)="select(o)">
+                {{o.name}}
+            </mat-list-item>
+            <mat-divider></mat-divider>
+        </ng-container>
+    </mat-nav-list>
+</div>  
+<div *ngIf="this.args.canSelectAll" mat-dialog-actions>
+  
+    <!-- <button mat-icon-button (click)="create()">
+        <mat-icon>add</mat-icon>
+    </button> -->
+    <button *ngIf="this.args.allowClear" mat-icon-button mat-dialog-close (click)="clear()" title="נקה בחירה">
+        <mat-icon>clear</mat-icon>
+    </button>
+    <!-- <button *ngif="!this.args.explicit || this.args.explicit.length > 0" mat-icon-button mat-dialog-close (click)="clear()" title="נקה בחירה">
+        <mat-icon>clear</mat-icon>
+    </button> -->
+
+
+</div>
