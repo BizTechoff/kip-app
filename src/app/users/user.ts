@@ -2,6 +2,7 @@ import * as jwt from 'jsonwebtoken';
 import { Allow, BackendMethod, Entity, Field, Fields, IdEntity, isBackend, Remult, UserInfo, Validators } from "remult";
 import { NotificationService } from '../common/notification';
 import { toDateTime } from '../common/utils';
+import { Garden } from '../core/garden/garden';
 import { terms } from "../terms";
 import { Roles } from './roles';
 
@@ -26,6 +27,9 @@ import { Roles } from './roles';
 )
 export class User extends IdEntity {
 
+    @Field<User, Garden>(() => Garden, { caption: terms.gardener })
+    garden!: Garden
+    
     @Fields.string({
         validate: [Validators.required],
         caption: terms.username

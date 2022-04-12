@@ -37,6 +37,7 @@ export class UsersComponent implements OnInit {
     rowsInPage: 100,
 
     columnSettings: users => [
+      users.garden,
       users.name,
       users.mobile,
       users.admin,

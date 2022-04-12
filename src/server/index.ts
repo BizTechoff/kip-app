@@ -23,7 +23,7 @@ async function startup() {
         helmet({
             contentSecurityPolicy: false,
         })
-    ); 
+    );
     const dataProvider = async () => {
         // if (process.env['NODE_ENV'] === "production")
         return createPostgresConnection({ configuration: "heroku", sslInDev: true })
