@@ -11,11 +11,7 @@ export interface SendSmsResponse {
 NotificationService.sendSms = async (req: SmsRequest): Promise<{ success: boolean, message: string, count: number }> => {
     let result: SendSmsResponse = { success: false, message: 'Sms channel is close!', count: 0 };
 
-    // result.success = true
-    // return result
-
-    console.debug(`sendSms: ${JSON.stringify(req)}`);
-    // console.log(process.env.SMS_CHANNEL_OPENED, process.env.SMS_CHANNEL_OPENED === 'true')
+    console.debug(`sendSms: { ${JSON.stringify(req)} }`);
     if (process.env['SMS_CHANNEL_OPENED']! === 'true') {
         let usa = req.mobile.startsWith('1')
         let url = process.env['SMS_URL']!

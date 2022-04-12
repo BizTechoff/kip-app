@@ -64,16 +64,35 @@ export class User extends IdEntity {
 
     @Fields.date<User>({
         allowApiUpdate: false,
-        caption: terms.verifiedDate,
+        caption: terms.verifiedCodeSentTime,
         displayValue: toDateTime
     })
-    verifiedCodeTime!: Date;
+    verifiedCodeSentTime!: Date;
+
+    @Fields.integer<User>({
+        allowApiUpdate: false,
+        caption: terms.verifiedSentCount
+    })
+    verifiedSentCount = 0
 
     @Fields.boolean({
-        includeInApi: false,
+        allowApiUpdate: false,
         caption: terms.verified
     })
     verified = false;
+
+    @Fields.date<User>({
+        allowApiUpdate: false,
+        caption: terms.verifiedTime,
+        displayValue: toDateTime
+    })
+    verifiedTime!: Date;
+
+    @Fields.integer<User>({
+        allowApiUpdate: false,
+        caption: terms.verifiedCount
+    })
+    verifiedCount = 0
 
     @Fields.date({
         allowApiUpdate: false,
@@ -116,8 +135,11 @@ export class User extends IdEntity {
                     uid: u.id
                 })
                 if (res.success) {
+                    u.verifiedTime = undefined!
+                    u.verified = false 
                     u.verifiedCode = code
-                    u.verifiedCodeTime = new Date()
+                    u.verifiedCodeSentTime = new Date()
+                    u.verifiedSentCount = (u.verifiedSentCount ?? 0) + 1
                     await u.save()
                     result.error = ''
                 }
@@ -126,7 +148,7 @@ export class User extends IdEntity {
                 }
                 return result
             }
-            if (u.verifiedCode > 0 && code > 0 && u.verifiedCode === code) {
+            else if (u.verifiedCode > 0 && code > 0 && u.verifiedCode === code) {
                 let now = new Date()
                 let fiveMinEarlier = new Date(
                     now.getFullYear(),
@@ -135,9 +157,11 @@ export class User extends IdEntity {
                     now.getHours(),
                     now.getMinutes() - 5);// 5min
 
-                if (u.verifiedCodeTime && u.verifiedCodeTime.getFullYear() > 1900) {
-                    if (u.verifiedCodeTime >= fiveMinEarlier) {
+                if (u.verifiedCodeSentTime && u.verifiedCodeSentTime.getFullYear() > 1900) {
+                    if (u.verifiedCodeSentTime >= fiveMinEarlier) {
                         u.verified = true
+                        u.verifiedTime = new Date()
+                        u.verifiedCount = (u.verifiedCount ?? 0) + 1
                         await u.save()
                     }
                     else {

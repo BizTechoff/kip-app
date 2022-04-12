@@ -19,7 +19,7 @@ async function startup() {
     app.use(sslRedirect());
     app.use(jwt({ secret: getJwtTokenSignKey(), credentialsRequired: false, algorithms: ['HS256'] }));
     app.use(compression());
-    app.use(
+    app.use( 
         helmet({
             contentSecurityPolicy: false,
         })
