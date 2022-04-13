@@ -25,6 +25,9 @@ export class UsersComponent implements OnInit {
 
   constructor(private dialog: DialogService, public remult: Remult) {
   }
+  get $() { return getFields(this, this.remult) };
+  terms = terms
+
   isAdmin() {
     return this.remult.isAllowed(Roles.admin);
   }
@@ -37,12 +40,12 @@ export class UsersComponent implements OnInit {
     rowsInPage: 100,
 
     columnSettings: users => [
-      users.garden,
       users.name,
       users.mobile,
       users.admin,
       users.gardener,
       users.parent,
+      users.garden,
       users.verifiedCodeSentTime,
       users.verifiedSentCount,
       users.verified,
@@ -78,8 +81,6 @@ export class UsersComponent implements OnInit {
 
   ngOnInit() {
   }
-  get $() { return getFields(this, this.remult) };
-  terms = terms
 
   async refresh() {
     await this.users.reloadData()

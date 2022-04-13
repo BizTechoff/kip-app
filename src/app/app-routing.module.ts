@@ -18,6 +18,7 @@ const routes: Routes = [
   { path: defaultRoute, component: HomeComponent, canActivate: [NotAuthenticatedGuard] },
   { path: terms.picking, component: PickingsComponent, canActivate: [ParentOrAdminGuard] },
   { path: terms.outgoing, component: UsersComponent, canActivate: [ParentOrAdminGuard] },
+  { path: terms.dafKesher, component: PickingsComponent, canActivate: [ParentOrAdminGuard] },
   { path: terms.gardens, component: GardensComponent, canActivate: [AdminGuard] },
   { path: terms.userAccounts, component: UsersComponent, canActivate: [AdminGuard] },
   { path: '**', redirectTo: '/' + defaultRoute, pathMatch: 'full' }

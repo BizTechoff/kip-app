@@ -76,7 +76,9 @@ export class AppComponent implements OnInit {
     openDialog(InputAreaComponent, i => i.args = {
       title: terms.updateInfo,
       fields: () => [
-        user.$.name
+        { field: user.$.garden, readonly: true, visible: () => this.remult.user.isGardener },
+        user.$.name,
+        user.$.mobile
       ],
       ok: async () => {
         await user._.save();

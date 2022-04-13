@@ -2,9 +2,13 @@
 // import '../app/common/selectors'
 
 export const terms = {
+    addGarden:'הוספת גן חדש',
+    address:'כתובת',
     addUser: 'הוספת משתמש חדש',
     addPicking: 'הוספת איסוף חדש',
     admin: 'אדמין',
+    childsCount:'מס.ילדים',
+    childsList:'רשימת ילדים',
     close: 'סגירה',
     areYouSureYouWouldLikeToDelete: "האם למחוק",
     cancel: 'ביטול',
@@ -14,14 +18,19 @@ export const terms = {
     confirmPassword: "אשר סיסמא",
     customer: 'לקוח',
     customers: 'לקוחות',
+    dafKesher:'דף קשר',
     date: 'תאריך',
     doesNotMatchPassword: "סיסמאות שונות",
     emailMiddle1LettersError: 'אמצע האימייל לפחות תו אחד',
     emailPrefix3LettersError: 'תחילת האימייל לפחות 3 תווים',
     emailSufix3LettersError: 'סיומת האימייל לפחות 3 תווים',
+    existsField:'שדה קיים',
+    fromTime: 'משעה',
+    toTime: 'עד שעה',
     gardener: 'גננת',
     gardens: 'גנים',
     garden: 'גן',
+    gateTimesConflict:'זמני איסוף חופפים',
     hello: "שלום",
     home: 'אפליקציה לאיסוף מהגן', // 'ברוכים הבאים',
     installer: 'מתקין',
@@ -34,6 +43,7 @@ export const terms = {
     missingAt: 'חסר את הסימן @ באימייל',
     missingPoint: 'חסר נקודה (.) באימייל',
     mobile: 'סלולרי',
+    name: 'שם',
     newOrder: 'הזמנה חדשה',
     no: 'לא',
     notificationVerificationCodeMessage: 'קוד אימות: !code! תקף לחמש דקות',
@@ -44,6 +54,7 @@ export const terms = {
     parent: 'הורה',
     password: 'סיסמא',
     picking: 'איסוף',
+    pickTimes:'זמני איסוף',
     products: 'מוצרים',
     refresh: 'רענון',
     requiredField: 'שדה חובה',
@@ -66,7 +77,7 @@ export const terms = {
     yes: 'כן',
     username: "שם משתמש"
 }
-
+ 
 declare module 'remult' {
     export interface UserInfo {
         isAdmin: boolean

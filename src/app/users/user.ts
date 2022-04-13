@@ -6,7 +6,7 @@ import { Garden } from '../core/garden/garden';
 import { terms } from "../terms";
 import { Roles } from './roles';
 
-@Entity<User>("Users", {
+@Entity<User>("users", {
     allowApiRead: Allow.authenticated,
     allowApiUpdate: Allow.authenticated,
     allowApiDelete: Roles.admin,
@@ -14,6 +14,15 @@ import { Roles } from './roles';
 },
     (options, remult) => {
         options.apiPrefilter = !remult.isAllowed(Roles.admin) ? { id: remult.user.id } : {};
+        options.validation = row => {
+            if (isBackend()) {
+                if (remult.user.isGardener) {
+                    if (!row.$.garden.value?.id?.trim().length) {
+                        row.$.garden.error = terms.requiredField
+                    }
+                }
+            }
+        }
         options.saving = async (user) => {
             if (isBackend()) {
                 if (user._.isNew()) {
@@ -21,15 +30,18 @@ import { Roles } from './roles';
                     if ((await remult.repo(User).count()) == 0)
                         user.admin = true;// If it's the first user, make it an admin
                 }
+                if (!user.gardener!) {
+                    user.garden = undefined!
+                }
             }
         }
     }
 )
 export class User extends IdEntity {
 
-    @Field<User, Garden>(() => Garden, { caption: terms.gardener })
+    @Field<User, Garden>(() => Garden, { caption: terms.garden })
     garden!: Garden
-    
+
     @Fields.string({
         validate: [Validators.required],
         caption: terms.username
@@ -113,7 +125,7 @@ export class User extends IdEntity {
     constructor(private remult: Remult) {
         super();
     }
- 
+
     @BackendMethod({ allowed: true })
     static async signIn(mobile: string, code: number, remult?: Remult): Promise<{ success: boolean, error: string }> {
         let result: { success: boolean, error: string } = { success: false, error: terms.invalidSignIn }
